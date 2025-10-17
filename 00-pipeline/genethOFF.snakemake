@@ -917,11 +917,11 @@ rule make_report:
     """
 onsuccess:
     print("Workflow finished, no error")
-    shell("conda run -n GENETHOFF echo 'You rock baby !' | cowpy -e greedy")
+    shell("conda run -n GENETHOFF bash ../02-ressources/success.sh")
     if config["clean_intermediates_files"].lower() == "yes":
       shell("rm -r 0*/")
 
 onerror:
     print("An error occurred")
-    shell("conda run -n GENETHOFF echo 'Houston, we have a problem' | cowpy -e dead -c mutilated")
+    shell("conda run -n GENETHOFF bash ../02-ressources/error.sh")
 

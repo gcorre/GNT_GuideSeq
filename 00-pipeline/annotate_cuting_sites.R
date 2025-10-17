@@ -115,15 +115,15 @@ if(exists("clusters_grna_match") && nrow(clusters_grna_match)>0){
   
   # collapse annotation per cluster -----------------------------------------------------
   results_granges_df_annot <- results_granges_df %>%
-    distinct(clusterID,annot.type,annot.gene_id,annot.gene_name,annot.gene_biotype,Onco_annotation)%>%
-    group_by(clusterID,annot.gene_id,annot.gene_name,annot.gene_biotype,Onco_annotation) %>%
+    distinct(clusterID,annot.type,annot.gene_id,annot.gene_name,annot.gene_type,Onco_annotation)%>%
+    group_by(clusterID,annot.gene_id,annot.gene_name,annot.gene_type,Onco_annotation) %>%
     summarise(pos =toString(annot.type)) %>% 
     mutate(position=case_when(str_detect(pos,"exon") ~ "exon", TRUE ~ "intron")) %>%
     dplyr::select(-pos) %>% 
     group_by(clusterID) %>% 
     summarise(gene_ensemblID = toString(annot.gene_id),
               Symbol = toString(annot.gene_name),
-              gene_type = toString(annot.gene_biotype),
+              gene_type = toString(annot.gene_type),
               position = toString(position),
               Onco_annotation = toString(Onco_annotation))
   

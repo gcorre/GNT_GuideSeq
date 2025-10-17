@@ -13,6 +13,10 @@ In order to get a working environment, we recommend to clone the git repository 
 
 ``` bash
 git clone https://github.com/gcorre/GENETHOFF
+
+# you can change branch if necessary using
+
+# git checkout branch_name
 ```
 
 Your folder architecture should look similar to :
@@ -88,16 +92,18 @@ For efficient genome alignment, you can use a pre-built index for Bowtie2. These
 If you decide to build the index, we recommend to **not** use haplotypes, scaffolds and unplaced chromosomes to avoid unnecessary multihits alignments. Instead, use the "primary Assembly" version from ensembl or gencode for example. Manually remove unwanted chromosomes if necessary using the seqkit program:
 
 ``` bash
-conda activate guideseq # load the 'GENETHOFF' environment to access tools
+conda activate GENETHOFF # load the 'GENETHOFF' environment to access tools
+
+# gunzip reference file if necessary
 
 # keep only chromosomes, dicard scaffolds
-seqkit grep  -r -p '^[chr]?[0-9XYM]+' Homo_sapiens.GRCh38.dna.primary_assembly.fa > your_clean_fasta
+seqkit grep  -r -p '^(chr)?[0-9XYM]+' Homo_sapiens.GRCh38.dna.primary_assembly.fa > your_clean_fasta
 ```
 
 Then use the bowtie2 command line:
 
 ``` bash
-bowtie2-build -@ {threads} {your_clean_fasta} {index_prefix}
+bowtie2-build -t {threads} {your_clean_fasta} {index_prefix}
 
 conda activate           # return to "base" environment
 ```

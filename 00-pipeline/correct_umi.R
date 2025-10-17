@@ -27,14 +27,14 @@ output <- args[6]
 rescueR2 <- args[7]
 
 ## debug
-
+# 
 # file <- "C:\\Users\\gcorre\\OneDrive - Institut\\Bureau\\VEGFA_s1_K562_neg.reads_per_UMI_per_IS.bed"
 # bed <- read.delim(file, header = F) %>% mutate(V1 = as.character(V1))
 # motif <- "NNWNNWNN"
 # filt.umi <- as.logical("TRUE")
 # hamming_threshold <- as.numeric(1)
 # method <- str_to_lower("Adjacency")
-# output <- "C:\\Users\\gcorre\\OneDrive - Institut\\Bureau\\VEGFA_s1_K562_neg.reads_per_UMI_per_IS_corrected.bed"
+# output <- "C:\\Users\\gcorre\\OneDrive - Institut\\Bureau\\VEGFA_s1_K562_neg.reads_per_UMI_per_IS_corrected2.bed"
 # rescueR2 <- TRUE
 
 
@@ -61,7 +61,7 @@ to_process <- bed %>% dplyr::count(site) %>% filter(n>1) %>% distinct(site) # ge
 
 bed_sub <- bed %>% semi_join(to_process)
 
-sp <- split(bed_sub,f = bed_sub$site)
+sp <- split(bed_sub,f = paste(bed_sub$site, bed_sub$orientation,sep=";"))
 
 
 
@@ -210,19 +210,19 @@ sp2 <- lapply(sp, function(x){
   counts <- x$count
   
   group_umis(umis, counts, hamming_threshold = hamming_threshold, graph = F, type = method)
-  
 }
 )
 
 # collapse all
 corrected <- sp2 %>% 
   bind_rows(.id="site") %>% 
-  distinct()
+  distinct() %>% 
+  separate(site, into =c("site","orientation"),sep = ";")
 
-
+# annotate UMI with their UMI node sequence and aggregate
 w <- bed_sub %>% 
-  left_join(corrected, by = c("site","UMI")) %>% 
-  group_by(chr,start,end,UMI=UMI_node,strand) %>% 
+  left_join(corrected , by = c("site","orientation","UMI")) %>% 
+  group_by(chr,start,end,UMI=UMI_node,strand,orientation) %>% 
   summarise(
     avg_qual = sum(count*Qual)/sum(count),
     UMIs = toString(UMI),
@@ -230,7 +230,6 @@ w <- bed_sub %>%
     count = sum(count),
     nUMIs = n()) %>% 
   ungroup
-
 
 
 # Aggregate with single UMI sites ---------------------------------------------------

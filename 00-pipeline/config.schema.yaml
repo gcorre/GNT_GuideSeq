@@ -1,0 +1,36 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+description: config list datasheet
+properties:
+  clean_intermediates_files:
+    enum: ["yes","no","YES","NO"]
+    type: string
+  skip_demultiplexing:
+    enum: ["yes","no","YES","NO"]
+    type: string
+  quantification:
+    enum: ["umi","fragment"]
+    type: string
+  sampleInfo_path:
+    type: string
+  rescue_R2:
+    enum: ["yes","no","YES","NO"]
+    type: string    
+  tolerate_bulges:
+    enum: ["yes","no","YES","NO"]
+    type: string    
+  UMI_filter: 
+    enum: ["TRUE","FALSE"]
+    type: string  
+  UMI_deduplication: 
+    enum: ["Adjacency","cluster"]
+    type=: string
+
+required:
+  - clean_intermediates_files
+  - skip_demultiplexing
+  - quantification
+  - sampleInfo_path
+  - rescue_R2
+  - tolerate_bulges
+  - UMI_filter
+  - UMI_deduplication

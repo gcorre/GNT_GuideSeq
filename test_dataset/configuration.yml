@@ -4,9 +4,11 @@ affiliation: "Therapeutic Gene Editing - GENETHON, INSERM U951, Paris-Saclay Uni
 contact: "gcorre@genethon.fr"
 version: 'V1.0'
 
-clean_intermediates_files: 'TRUE'
+clean_intermediates_files: 'no'
+skip_demultiplexing: "yes"
+quantification: "fragment" # use "umi" or "fragment" for the quantification (only if rescue_R2 is 'no")
+rescue_R2: "no"     # Rescue R2 reads if R1 is too short or the pair doesn't align properly.
 
-skip_demultiplexing: "TRUE"
 
 ## Library informations
 sampleInfo_path: "test_datasheet.csv"
@@ -38,10 +40,9 @@ minLength: 25 ## Minimal read length after trimming, before alignment
 
 ## Alignement 
 ################################################
-aligner: "bowtie2"   ## Aligner to use (bowtie2 or bwa)
+aligner: "bowtie2"   ## Aligner to use
 minFragLength: 100         # Minimal fragment length after alignment
 maxFragLength: 1500        # Maximal fragment length after alignment 
-rescue_R2: "TRUE"     # Rescur R2 reads if R1 is too short or the pair doesn't align properly.
 
 ################################################
 
@@ -57,7 +58,7 @@ UMI_filter: "TRUE"              # If TRUE, remove UMIs that do no match the expe
 
 ################################################
 ## Off targets calling
-tolerate_bulges: "TRUE"           # whether to include gaps in the gRNA alignment (this will change the gap penalty during SW pairwise alignment)
+tolerate_bulges: "yes"           # whether to include gaps in the gRNA alignment (this will change the gap penalty during SW pairwise alignment)
 max_edits_crRNA: 6                # filter clusters with less or equal than n edits in the crRNA sequence (edits = substitutions + INDELs)
 ISbinWindow: 100                  # insertion sites closer than 'ISbinWindow' will be clustered together
 minReadsPerUMI: 4                 # Min number of reads per UMIs (>=)
